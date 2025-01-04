@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static MonoMod.InlineRT.MonoModRule;
 
 namespace JotunnModExample
 {
@@ -70,6 +71,15 @@ namespace JotunnModExample
                 }
             }
         }
+        [HarmonyPatch(typeof(ZoneSystem), "GetGlobalKey", new Type[] {typeof(GlobalKeys)})]
+        [HarmonyPostfix]
+        private static void PostfixTeleport(ref bool __result, GlobalKeys key)
+        {
+            if (key == GlobalKeys.TeleportAll)
+            {
+                __result = true;
+            }   
+        }
 
         //  List<ItemDrop.ItemData>
         private static void EditDrop(ref DropTable __instance)
@@ -82,7 +92,8 @@ namespace JotunnModExample
             for (int i = 0; i < __instance.m_drops.Count; i++)
             {
                 var drop = __instance.m_drops[i];
-                if (drop.m_stackMax > 1)
+                ItemDrop.ItemData itemData = drop.m_item.GetComponent<ItemDrop>()?.m_itemData;
+                if (drop.m_stackMax > 1 || itemData?.m_shared.m_itemType == ItemDrop.ItemData.ItemType.Material)
                 {
                     drop.m_stackMax *= 2;
                 }
