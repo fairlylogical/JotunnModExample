@@ -65,6 +65,11 @@ namespace JotunnModExample
                 foreach(var res in __result)
                 {
                     res.m_shared.m_teleportable = true;
+                    if (res.m_shared.m_name == "Stone")
+                    {
+                        continue;
+                    }
+
                     if (res.m_shared.m_itemType == ItemDrop.ItemData.ItemType.Material)
                     {
                         res.m_stack *= 4;
@@ -93,12 +98,17 @@ namespace JotunnModExample
             for (int i = 0; i < __instance.m_drops.Count; i++)
             {
                 var drop = __instance.m_drops[i];
-                ItemDrop.ItemData itemData = drop.m_item.GetComponent<ItemDrop>()?.m_itemData;
+                GameObject item = drop.m_item;
+                ItemDrop.ItemData itemData = item.GetComponent<ItemDrop>()?.m_itemData;
                 if (itemData != null)
                 {
                     itemData.m_shared.m_teleportable = true;
+                    if (itemData.m_shared.m_name == "Stone" || item?.name == "Stone")
+                    {
+                        continue;
+                    }
                 }
-                if (drop.m_stackMax > 1 || itemData?.m_shared.m_itemType == ItemDrop.ItemData.ItemType.Material)
+                if (drop.m_stackMax > 1 || itemData?.m_shared.m_itemType == ItemDrop.ItemData.ItemType.Material  || itemData?.m_shared.m_itemType == ItemDrop.ItemData.ItemType.Fish)
                 {
                     drop.m_stackMax *= 2;
                 }
