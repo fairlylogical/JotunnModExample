@@ -108,7 +108,7 @@ namespace JotunnModExample
                         continue;
                     }
                 }
-                if (drop.m_stackMax > 1 || itemData?.m_shared.m_itemType == ItemDrop.ItemData.ItemType.Material  || itemData?.m_shared.m_itemType == ItemDrop.ItemData.ItemType.Fish)
+                if (drop.m_stackMax > 1 || itemData?.m_shared.m_itemType == ItemDrop.ItemData.ItemType.Material  || itemData?.m_shared.m_itemType == ItemDrop.ItemData.ItemType.Ammo)
                 {
                     drop.m_stackMax *= 2;
                 }
