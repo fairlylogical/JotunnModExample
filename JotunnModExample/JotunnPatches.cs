@@ -65,12 +65,12 @@ namespace JotunnModExample
                 foreach(var res in __result)
                 {
                     res.m_shared.m_teleportable = true;
-                    if (res.m_shared.m_name == "Stone")
+                    if (res.m_dropPrefab?.name == "Stone" || res.m_shared.m_name == "Stone")
                     {
                         continue;
                     }
 
-                    if (res.m_shared.m_itemType == ItemDrop.ItemData.ItemType.Material)
+                    if (res.m_shared.m_itemType == ItemDrop.ItemData.ItemType.Material || res.m_shared.m_itemType == ItemDrop.ItemData.ItemType.Ammo)
                     {
                         res.m_stack *= 4;
                     }
@@ -103,7 +103,7 @@ namespace JotunnModExample
                 if (itemData != null)
                 {
                     itemData.m_shared.m_teleportable = true;
-                    if (itemData.m_shared.m_name == "Stone" || item?.name == "Stone")
+                    if (itemData.m_shared.m_name == "Stone" || item?.name == "Stone" || itemData.m_dropPrefab?.name == "Stone")
                     {
                         continue;
                     }
