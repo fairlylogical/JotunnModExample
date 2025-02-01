@@ -86,11 +86,28 @@ namespace JotunnModExample
                 __result = true;
             }   
         }
+        [HarmonyPatch(typeof(SEMan), "ModifyEitrRegen")]
+        [HarmonyPostfix]
+        private static void ManaRegen(ref float eitrMultiplier)
+        {
+            eitrMultiplier = 15f;
+        }
+
+        [HarmonyPatch(typeof(Player), "ActivateGuardianPower")]
+        [HarmonyPostfix]
+        private static void ModerCooldown(ref Player __instance)
+        {
+            if (__instance.GetGuardianPowerName() == "GP_Moder")
+            {
+                __instance.m_guardianPowerCooldown = 0.1f;
+            }
+        }
 
         //  List<ItemDrop.ItemData>
         private static void EditDrop(ref DropTable __instance)
         {
             __instance.m_dropChance = 100;
+            bool hasStone = false;
             if (__instance.m_dropMax > 1)
             {
                 __instance.m_dropMax *= 2;
@@ -105,6 +122,7 @@ namespace JotunnModExample
                     itemData.m_shared.m_teleportable = true;
                     if (itemData.m_shared.m_name == "Stone" || item?.name == "Stone" || itemData.m_dropPrefab?.name == "Stone")
                     {
+                        hasStone = true;
                         continue;
                     }
                 }
@@ -115,7 +133,7 @@ namespace JotunnModExample
                 drop.m_stackMin = drop.m_stackMax;
             }
             __instance.m_dropMin = __instance.m_dropMax;
-            __instance.m_oneOfEach = false;
+            __instance.m_oneOfEach = hasStone;
         }
     }
 }
