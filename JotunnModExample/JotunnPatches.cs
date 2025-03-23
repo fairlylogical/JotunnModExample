@@ -37,6 +37,7 @@ namespace JotunnModExample
                     drop.m_amountMax *= 2;
                 }
                 drop.m_amountMin = drop.m_amountMax;
+                
             }
             return true;
         }
@@ -90,7 +91,7 @@ namespace JotunnModExample
         [HarmonyPostfix]
         private static void ManaRegen(ref float eitrMultiplier)
         {
-            eitrMultiplier = 15f;
+            eitrMultiplier = 12f;
         }
 
         [HarmonyPatch(typeof(Player), "ActivateGuardianPower")]
@@ -117,23 +118,44 @@ namespace JotunnModExample
                 var drop = __instance.m_drops[i];
                 GameObject item = drop.m_item;
                 ItemDrop.ItemData itemData = item.GetComponent<ItemDrop>()?.m_itemData;
+                /*
                 if (itemData != null)
                 {
                     itemData.m_shared.m_teleportable = true;
-                    if (itemData.m_shared.m_name == "Stone" || item?.name == "Stone" || itemData.m_dropPrefab?.name == "Stone")
+                    if (
+    isNameMatch(itemData, item, "Stone")
+    || isNameMatch(itemData, item, "CopperOre")
+    || isNameMatch(itemData, item, "BlackMetalScrap")
+    || isNameMatch(itemData, item, "BlackMarble")
+    )
                     {
                         hasStone = true;
                         continue;
                     }
                 }
+                */
                 if (drop.m_stackMax > 1 || itemData?.m_shared.m_itemType == ItemDrop.ItemData.ItemType.Material  || itemData?.m_shared.m_itemType == ItemDrop.ItemData.ItemType.Ammo)
                 {
                     drop.m_stackMax *= 2;
                 }
                 drop.m_stackMin = drop.m_stackMax;
             }
+            //__instance.m_oneOfEach = hasStone;
             __instance.m_dropMin = __instance.m_dropMax;
-            __instance.m_oneOfEach = hasStone;
         }
+        private static bool isNameMatch(ItemDrop.ItemData itemData, GameObject item, string name)
+        {
+            return itemData.m_shared.m_name == name || item?.name == name || itemData.m_dropPrefab?.name == name;
+        }
+
+        [HarmonyPatch(typeof(Plant), "GetGrowTime")]
+        public class MakePlantsGrowFaster
+        {
+            private static void Postfix(ref float __result)
+            {
+                __result /= 4;
+            }
+        }
+
     }
 }
